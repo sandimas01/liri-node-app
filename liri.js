@@ -1,11 +1,15 @@
 require("dotenv").config();
 
 var keys = require('./keys.js');
-var twitter = require("twitter");
+var Twitter = require("twitter");
 var Spotify = require('node-spotify-api');
 var request = require("request");
 var fs = require('fs');
 
+var spotify = new Spotify(keys.spotify);
+var client = new Twitter(keys.twitter);
+// console.log(spotify);
+// console.log(client);
 
 // INSTRUCTIONS:
 // ---------------------------------------------------------------------------------------------------------
@@ -17,7 +21,7 @@ var fs = require('fs');
 // ---------------------------------------------------------------------------------------------------------
 
 // Include the request npm package (Don't forget to run "npm install request" in this folder first!)
-var request = require("request");
+// var request = require("request");
 
 // Store all of the arguments in an array
 var nodeArgs = process.argv;
@@ -43,12 +47,17 @@ for (var i = 2; i < nodeArgs.length; i++) {
 }
 
 // Then run a request to the OMDB API with the movie specified
-var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&tomatoes=true&apikey=trilogy";
+var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&tomatoes=true&r=json&apikey=trilogy";
 
 // This line is just to help us debug against the actual URL.
 console.log(queryUrl);
 
 request(queryUrl, function(error, response, body) {
+
+    // console.log(body)
+
+    // var obj = JSON.parse(body);
+    // console.log(obj.Ratings[1].Value);
 
   // If the request is successful
   if (!error && response.statusCode === 200) {
@@ -60,7 +69,7 @@ request(queryUrl, function(error, response, body) {
     console.log("Title: " + JSON.parse(body).Title);
     console.log("Year: " + JSON.parse(body).Year);
     console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
-    console.log("Rotten Tomatoes Rating: " + JSON.parse(body).tomatoRating);
+    console.log("Rotten Tomatoes Rating: " + JSON.parse(body).Ratings[1].Value);
     console.log("Rotten Tomatoes URL: " + JSON.parse(body).tomatoURL);
     console.log("Country: " + JSON.parse(body).Country);
     console.log("Language: " + JSON.parse(body).Language);
