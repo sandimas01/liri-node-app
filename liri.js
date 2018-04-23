@@ -16,12 +16,35 @@ for(i=4; i<process.argv.length; i++){
     secondUserInput += '+' + process.argv[i];
 }
 
-if (userInput === undefined){
-console.log("Please type in: 'my-tweets', 'spotify-this-song'+'song name', 'movie-this'+'movie name', or 'do-what-it-says', to get started!");
+function appChoice(){
+    if (userInput === undefined){
+        console.log("Please type in: 'my-tweets', 'spotify-this-song'+'song name', 'movie-this'+'movie name', or 'do-what-it-says', to get started!");
+        }
+        else if (userInput === "do-what-it-says") {
+            console.log("random.txt reader app started");
+        userInput = "spotify-this-song"
+        appChoice()
+        }
+        else if (userInput === "my-tweets") {
+            console.log('twitter app started');
+            twitterApp()
+        }
+            else if (userInput === "spotify-this-song") {
+                console.log('music search app started');
+                spotifyApp()
+            }
+
+            else if (userInput === "movie-this") {
+                console.log('movie search app started');
+                movieApp()
+            }
 }
 
-    if (userInput === "my-tweets") {
-    console.log('twitter app started');
+
+
+
+
+    function twitterApp(){
         var client = new Twitter({
             consumer_key: keys.twitter.consumer_key,
             consumer_secret: keys.twitter.consumer_secret,
@@ -43,8 +66,7 @@ console.log("Please type in: 'my-tweets', 'spotify-this-song'+'song name', 'movi
             });
     }
 
-    else if (userInput === "spotify-this-song") {
-    console.log('music search app started');
+    function spotifyApp(){
         var searchSong;
         if(secondUserInput === undefined){
             searchSong = "Ace+of+Base+The+Sign";
@@ -73,8 +95,7 @@ console.log("Please type in: 'my-tweets', 'spotify-this-song'+'song name', 'movi
         });
     }
 
-    else if (userInput === "movie-this") {
-console.log('movie search app started');
+function movieApp(){
     var searchMovie;
         if(secondUserInput === undefined){
             searchMovie = "Mr+Nobody";
@@ -102,9 +123,6 @@ console.log('movie search app started');
         });
     }
 
-    else if (userInput === "do-what-it-says") {
-        console.log("random.txt reader app started");
-
-    }
+appChoice()
 
     
