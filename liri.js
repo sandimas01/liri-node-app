@@ -6,10 +6,10 @@ var Spotify = require('node-spotify-api');
 var request = require("request");
 var fs = require('fs');
 
-var spotify = new Spotify(keys.spotify);
+// var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
 // console.log(spotify);
-// console.log(client);
+console.log(client);
 
 // INSTRUCTIONS:
 // ---------------------------------------------------------------------------------------------------------
