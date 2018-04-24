@@ -14,21 +14,23 @@ var userInput = process.argv[2];
 var secondUserInput = process.argv[3];
 for(i=4; i<process.argv.length; i++){
     secondUserInput += '+' + process.argv[i];
-}
+    }
 
-function appChoice(){
-    if (userInput === undefined){
-        console.log("Please type in: 'my-tweets', 'spotify-this-song'+'song name', 'movie-this'+'movie name', or 'do-what-it-says', to get started!");
-        }
-        else if (userInput === "do-what-it-says") {
-            console.log("random.txt reader app started");
-        userInput = "spotify-this-song"
-        appChoice()
-        }
-        else if (userInput === "my-tweets") {
-            console.log('twitter app started');
-            twitterApp()
-        }
+    function appChoice(){
+        if (userInput === undefined){
+            console.log("Please type in: 'my-tweets', 'spotify-this-song'+'song name', 'movie-this'+'movie name', or 'do-what-it-says', to get started!");
+            }
+
+            else if (userInput === "do-what-it-says") {
+                console.log("random.txt reader app started");
+                randomApp()
+            }
+
+            else if (userInput === "my-tweets") {
+                console.log('twitter app started');
+                twitterApp()
+            }
+
             else if (userInput === "spotify-this-song") {
                 console.log('music search app started');
                 spotifyApp()
@@ -38,11 +40,7 @@ function appChoice(){
                 console.log('movie search app started');
                 movieApp()
             }
-}
-
-
-
-
+    }
 
     function twitterApp(){
         var client = new Twitter({
@@ -73,8 +71,8 @@ function appChoice(){
         } else{
             searchSong = secondUserInput;
         }
-    
-    
+
+
         spotify.search({ type: 'track', query: searchSong, count: 10 }, function(err, data) {
             for (var i = 0; i < 10; i++) {
                 console.log("Spotify search:", searchSong);
@@ -95,32 +93,52 @@ function appChoice(){
         });
     }
 
-function movieApp(){
-    var searchMovie;
-        if(secondUserInput === undefined){
-            searchMovie = "Mr+Nobody";
-        } else{
-            searchMovie = secondUserInput;
+    function movieApp(){
+        var searchMovie;
+            if(secondUserInput === undefined){
+                searchMovie = "Mr+Nobody";
+            } else{
+                searchMovie = secondUserInput;
+            }
+
+            var queryUrl = "http://www.omdbapi.com/?t=" + searchMovie + "&y=&plot=short&tomatoes=true&r=json&apikey=trilogy";
+
+
+            request(queryUrl, function(error, response, body) {
+
+            if (!error && response.statusCode === 200) {
+
+                console.log("Title: " + JSON.parse(body).Title);
+                console.log("Year: " + JSON.parse(body).Year);
+                console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
+                console.log("Rotten Tomatoes Rating: " + JSON.parse(body).Ratings[1].Value);
+                console.log("Rotten Tomatoes URL: " + JSON.parse(body).tomatoURL);
+                console.log("Country: " + JSON.parse(body).Country);
+                console.log("Language: " + JSON.parse(body).Language);
+                console.log("Plot: " + JSON.parse(body).Plot);
+                console.log("Actors: " + JSON.parse(body).Actors);
+            }
+            });
         }
 
-        var queryUrl = "http://www.omdbapi.com/?t=" + searchMovie + "&y=&plot=short&tomatoes=true&r=json&apikey=trilogy";
-
-
-        request(queryUrl, function(error, response, body) {
-
-        if (!error && response.statusCode === 200) {
-
-            console.log("Title: " + JSON.parse(body).Title);
-            console.log("Year: " + JSON.parse(body).Year);
-            console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
-            console.log("Rotten Tomatoes Rating: " + JSON.parse(body).Ratings[1].Value);
-            console.log("Rotten Tomatoes URL: " + JSON.parse(body).tomatoURL);
-            console.log("Country: " + JSON.parse(body).Country);
-            console.log("Language: " + JSON.parse(body).Language);
-            console.log("Plot: " + JSON.parse(body).Plot);
-            console.log("Actors: " + JSON.parse(body).Actors);
-        }
-        });
+    function randomApp(){
+        fs.readFile("random.txt", "utf8", function(error, data) {
+            if(error){
+                 console.log(error);
+             } else {
+                //  console.log(data);
+        
+                 var dataArr = data.split(',');
+                 userInput = dataArr[0];
+                 secondUserInput = dataArr[1];
+                 for(i=2; i<dataArr.length; i++){
+                     secondUserInput = secondUserInput + "+" + dataArr[i];
+                    }
+                    // console.log(userInput);
+                    // console.log(secondUserInput);
+                    appChoice()
+                }
+        });   
     }
 
 appChoice()
